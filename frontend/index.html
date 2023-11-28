@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upload file</title>
+  </head>
+  <body>
+    <div id="uploadFileDiv">
+      <input id="fileInput" type="file" />
+      <button id="uploadButton">Upload</button>
+    </div>
+  </body>
+</html>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  // getting file
+  let file = null;
+  const fileInput = document.querySelector("#fileInput");
+  fileInput.addEventListener("change", (e) => {
+    file = e.target.files[0];
+  });
+
+  //   uploading file on click
+  let uploadButton = document.querySelector("#uploadButton");
+  uploadButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    // console.log(formData.get("file"));
+    // checking if file is selected or not
+    if (!file) {
+      alert("Please select a file");
+      return;
+    }
+
+    alert("uploading.....");
+    uploadButton.innerHTML = "uploading...";
+
+    axios
+      .post(`http://localhost:4500/upload`, formData, {
+        headers: {
+          Authorization: localStorage.getItem("token"),
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then((res) => {
+        uploadButton.innerHTML = "Upload";
+        alert("file uploaded successfully");
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("something went wrong");
+      });
+  });
+</script>
