@@ -5,29 +5,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Upload file</title>
   </head>
+  <style>
+    #container {
+      box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+      position: absolute;
+      padding: 15px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    #uploadFileDiv {
+      border: 1px solid #ccc;
+      text-align: center;
+      padding: 10px;
+    }
+    #uploadButton {
+      padding: 10px 20px;
+      border: none;
+      background-color: #4caf50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    #uploadButton:hover {
+      background-color: #45a049;
+    }
+  </style>
   <body>
-    <div id="uploadFileDiv">
-      <input id="fileInput" type="file" />
-      <button id="uploadButton">Upload</button>
+    <div id="container">
+      <h3>Choose a file to Upload</h3>
+      <div id="uploadFileDiv">
+        <input id="fileInput" type="file" />
+        <button id="uploadButton">Upload</button>
+      </div>
     </div>
   </body>
 </html>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-  // getting file
+  // Variable to hold the selected file
   let file = null;
+
+  // capturing the selected file
   const fileInput = document.querySelector("#fileInput");
   fileInput.addEventListener("change", (e) => {
     file = e.target.files[0];
   });
 
-  //   uploading file on click
+  // Handling upload button click
   let uploadButton = document.querySelector("#uploadButton");
   uploadButton.addEventListener("click", async (e) => {
     e.preventDefault();
+
+    // Creating a FormData object to handle file upload
     const formData = new FormData();
     formData.append("file", file);
     // console.log(formData.get("file"));
+
     // checking if file is selected or not
     if (!file) {
       alert("Please select a file");
@@ -35,12 +70,15 @@
     }
 
     alert("uploading.....");
-    uploadButton.innerHTML = "uploading...";
 
+    // changing uploadButton text and color in uploading phase
+    uploadButton.innerHTML = "uploading...";
+    uploadButton.style.backgroundColor = "#ffc107";
+
+    // Making a POST request to upload the file using Axios
     axios
       .post(`http://localhost:4500/upload`, formData, {
         headers: {
-          Authorization: localStorage.getItem("token"),
           "Content-Type": "multipart/form-data",
         },
       })
@@ -50,6 +88,8 @@
       })
       .catch((err) => {
         console.log(err);
+        uploadButton.innerHTML = "Upload";
+        uploadButton.style.backgroundColor = "#4caf50";
         alert("something went wrong");
       });
   });
