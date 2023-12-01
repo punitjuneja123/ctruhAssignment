@@ -55,9 +55,7 @@
 
   // Handling upload button click
   let uploadButton = document.querySelector("#uploadButton");
-  uploadButton.addEventListener("click", async (e) => {
-    e.preventDefault();
-
+  uploadButton.addEventListener("click", async () => {
     // Creating a FormData object to handle file upload
     const formData = new FormData();
     formData.append("file", file);

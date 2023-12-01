@@ -30,6 +30,7 @@ uploadRouter.post("/upload", upload.single("file"), (req, res) => {
 
   // Sending a success response after the file is saved
   stream.on("finish", () => {
+    console.log("file uploaded");
     res.status(201).send("File uploaded successfully");
   });
 });
